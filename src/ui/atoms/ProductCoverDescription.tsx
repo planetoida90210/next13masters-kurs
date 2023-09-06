@@ -1,9 +1,8 @@
+import { type ProductItem } from "../../../types";
+import { formatMoney } from "@/utils";
+
 type ProductCoverDescriptionProps = {
-	product: {
-		title: string;
-		category: string;
-		price: number;
-	};
+	product: ProductItem;
 };
 
 export const ProductCoverDescription = ({
@@ -15,7 +14,7 @@ export const ProductCoverDescription = ({
 				<h3 className="truncate font-medium">{title}</h3>
 				<p className="text-slate-700">{category}</p>
 			</div>
-			<p>{price}$</p>
+			<p>{formatMoney(price)}</p>
 		</div>
 	);
 };
