@@ -1,8 +1,8 @@
-import { type ProductItem } from "../types";
+import { type ProductItemType } from "../types";
 import { formatMoney } from "@/utils";
 
 type ProductCoverDescriptionProps = {
-	product: ProductItem;
+	product: ProductItemType;
 };
 
 export const ProductCoverDescription = ({
