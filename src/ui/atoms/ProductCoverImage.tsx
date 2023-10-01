@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 type ProductCoverImageProps = {
 	src: string;
 	alt: string;
@@ -8,8 +10,14 @@ export const ProductCoverImage = ({
 	alt,
 }: ProductCoverImageProps) => {
 	return (
-		<div className="mx-auto aspect-square overflow-hidden rounded-lg">
-			<img src={src} alt={alt} width={320} height={320} />
+		<div className="relative mx-auto aspect-square overflow-hidden rounded-lg ">
+			<Image
+				src={src}
+				alt={alt}
+				width={320}
+				height={320}
+				objectFit="cover"
+			/>
 		</div>
 	);
 };
