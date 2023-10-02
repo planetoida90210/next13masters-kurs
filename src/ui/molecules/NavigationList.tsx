@@ -7,7 +7,7 @@ export const NavigationList = () => {
 				<ActiveLink
 					href={"/"}
 					className="text-gray-500 hover:text-gray-700"
-					activeClassName="underline"
+					activeClassName="border-b border-gray-900"
 					exact={true}
 				>
 					Home
@@ -17,7 +17,7 @@ export const NavigationList = () => {
 				<ActiveLink
 					href={"/products"}
 					className="text-gray-500 hover:text-gray-700"
-					activeClassName="underline"
+					activeClassName="border-b border-gray-900"
 					exact={false}
 				>
 					All
