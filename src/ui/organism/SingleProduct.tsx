@@ -1,6 +1,5 @@
 import { type ProductItemType } from "@/ui/types";
 import { SingleProductDescription } from "@/ui/molecules/SingleProductDescription";
-import { ProductName } from "@/ui/atoms/ProductName";
 import { SingleProductImage } from "@/ui/atoms/SingleProductImage";
 
 type SingleProductProps = {
@@ -17,7 +16,6 @@ export const SingleProduct = ({ product }: SingleProductProps) => {
 				/>
 			</div>
 			<div className="space-y-4 lg:w-1/2">
-				<ProductName name={product.name} level="h1" />
 				<SingleProductDescription
 					name={product.name}
 					price={product.price}
