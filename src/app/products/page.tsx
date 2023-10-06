@@ -2,7 +2,11 @@ import { getProductsList } from "@/api/products";
 import { ProductList } from "@/ui/organism/ProductList";
 
 export default async function ProductsPage() {
-	const products = await getProductsList();
+	const products = await getProductsList(0, 20);
 
-	return <ProductList products={products} />;
+	return (
+		<div>
+			<ProductList products={products} />
+		</div>
+	);
 }

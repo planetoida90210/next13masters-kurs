@@ -10,6 +10,7 @@ type ActiveLinkProps<T extends string> = {
 	exact?: boolean;
 	className?: string;
 	activeClassName?: string;
+	role?: string;
 };
 
 export const ActiveLink = <T extends string>({
