@@ -7,6 +7,7 @@ export async function generateStaticParams() {
 	const pages = Array.from({ length: numOfPages }, (_, i) => i + 1);
 	return pages.map((page) => ({ page: page.toString() }));
 }
+
 export default async function ProductPaginationPage({
 	params,
 }: {
