@@ -14,19 +14,71 @@ type ProductResponseItem = {
 	longDescription: string;
 };
 
-export const getProductsList = async (
-	start: number = 0,
-	take: number = 20,
-) => {
+export const getProductsList = async (): Promise<
+	ProductItemType[]
+> => {
 	const res = await fetch(
-		`https://naszsklep-api.vercel.app/api/products?skip=${start}&take=${take}`,
+		"https://api-eu-central-1-shared-euc1-02.hygraph.com/v2/clnixtark1jfc01uhe7v68ttu/master",
+		{
+			method: "POST",
+			body: JSON.stringify({
+				query: /* GraphQL */ `
+					query GetProductsList {
+						products(first: 10) {
+							id
+							name
+							description
+							images {
+								url
+							}
+							price
+						}
+					}
+				`,
+			}),
+			headers: {
+				"Content-Type": "application/json",
+			},
+		},
 	);
-	const productsResponse =
-		(await res.json()) as ProductResponseItem[];
-	const products = productsResponse.map(
-		productResponseItemToProductItemType,
-	);
-	return products;
+
+	type GraphQLResponse<T> =
+		| { data?: undefined; errors: { message: string }[] }
+		| { data: T; errors?: undefined };
+
+	type ProductsGraphqlResponse = {
+		data: {
+			products: {
+				id: string;
+				name: string;
+				description: string;
+				images: {
+					url: string;
+				}[];
+				price: number;
+			}[];
+		};
+	};
+
+	const graphqlResponse =
+		(await res.json()) as GraphQLResponse<ProductsGraphqlResponse>;
+
+	if (graphqlResponse.errors) {
+		throw TypeError(graphqlResponse.errors[0].message);
+	}
+
+	return graphqlResponse.data.products.map((product) => {
+		return {
+			id: product.id,
+			name: product.name,
+			category: "",
+			price: product.price,
+			coverImage: {
+				src: product.images[0].url,
+				alt: product.name,
+			},
+		};
+	});
 };
 
 export const getProductItemById = async (
