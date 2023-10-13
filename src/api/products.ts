@@ -1,5 +1,6 @@
+import { executeGraphql } from "./graphqlApi";
 import { type ProductItemType } from "@/ui/types";
-import { type TypedDocumentString } from "@/gql/graphql";
+import { ProductsGetListDocument } from "@/gql/graphql";
 
 type ProductResponseItem = {
 	id: string;
@@ -15,97 +16,20 @@ type ProductResponseItem = {
 	longDescription: string;
 };
 
-export const executeGraphql = async <TResult, TVariables>(
-	query: TypedDocumentString<TResult, TVariables>,
-	variables: TVariables,
-): Promise<TResult> => {
-	if (!process.env.GRAPHQL_URL) {
-		throw TypeError("GRAPHQL_URL is not defined");
-	}
-
-	const res = await fetch(process.env.GRAPHQL_URL, {
-		method: "POST",
-		body: JSON.stringify({
-			query,
-			variables,
-		}),
-		headers: {
-			"Content-Type": "application/json",
-		},
-	});
-
-	const graphqlResponse =
-		(await res.json()) as GraphQLResponse<TResult>;
-
-	if (graphqlResponse.errors) {
-		throw TypeError(`GraphQL Error`, {
-			cause: graphqlResponse.errors,
-		});
-	}
-
-	return graphqlResponse.data;
-};
-
 export const getProductsList = async (): Promise<
 	ProductItemType[]
 > => {
-	const res = await fetch(
-		"https://api-eu-central-1-shared-euc1-02.hygraph.com/v2/clnixtark1jfc01uhe7v68ttu/master",
-		{
-			method: "POST",
-			body: JSON.stringify({
-				query: /* GraphQL */ `
-					query GetProductsList {
-						products(first: 10) {
-							id
-							name
-							description
-							images {
-								url
-							}
-							price
-						}
-					}
-				`,
-			}),
-			headers: {
-				"Content-Type": "application/json",
-			},
-		},
+	const graphqlResponse = await executeGraphql(
+		ProductsGetListDocument,
 	);
 
-	type GraphQLResponse<T> =
-		| { data?: undefined; errors: { message: string }[] }
-		| { data: T; errors?: undefined };
-
-	type ProductsGraphqlResponse = {
-		data: {
-			products: {
-				id: string;
-				name: string;
-				description: string;
-				images: {
-					url: string;
-				}[];
-				price: number;
-			}[];
-		};
-	};
-
-	const graphqlResponse =
-		(await res.json()) as GraphQLResponse<ProductsGraphqlResponse>;
-
-	if (graphqlResponse.errors) {
-		throw TypeError(graphqlResponse.errors[0].message);
-	}
-
-	return graphqlResponse.data.products.map((product) => {
+	return graphqlResponse.products.map((product) => {
 		return {
 			id: product.id,
 			name: product.name,
-			category: "",
+			category: product.categories[0]?.name || "",
 			price: product.price,
-			coverImage: {
+			coverImage: product.images[0] && {
 				src: product.images[0].url,
 				alt: product.name,
 			},

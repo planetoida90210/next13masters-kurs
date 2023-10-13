@@ -1,28 +1,25 @@
+import { type Route } from "next";
 import { ActiveLink } from "../atoms/ActiveLink";
+
+const navLinks: {
+	href: Route<string>;
+	title: string;
+	exact?: boolean;
+}[] = [
+	{ href: "/", title: "Home", exact: true },
+	{ href: "/products", title: "All" },
+];
 
 export const NavigationList = () => {
 	return (
 		<ul className="mt-2 flex justify-center space-x-4">
-			<li>
-				<ActiveLink
-					href={"/"}
-					className="text-gray-500 hover:text-gray-700"
-					activeClassName="border-b border-gray-900"
-					exact={true}
-				>
-					Home
-				</ActiveLink>
-			</li>
-			<li>
-				<ActiveLink
-					href={"/products"}
-					className="text-gray-500 hover:text-gray-700"
-					activeClassName="border-b border-gray-900"
-					exact={false}
-				>
-					All
-				</ActiveLink>
-			</li>
+			{navLinks.map(({ href, title, exact }, index) => (
+				<li key={index}>
+					<ActiveLink href={href} exact={exact}>
+						{title}
+					</ActiveLink>
+				</li>
+			))}
 		</ul>
 	);
 };
